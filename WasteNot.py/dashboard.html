@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - WasteNot</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script defer src="dashboard.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-leaf"></i>
+        <span>WasteNot</span>
+      </div>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="inventory.html" class="nav-link">Inventory</a>
+        <a href="recipes.html" class="nav-link">Recipes</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="profile.html" class="nav-link">Profile</a>
+      </div>
+      <div class="nav-auth">
+        <button id="login-btn" class="auth-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </button>
+        <button id="logout-btn" class="auth-btn" style="display: none;">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="dashboard-header">
+      <h1>Dashboard</h1>
+      <p>Welcome back! Here's your food waste overview.</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Quick Stats -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-apple-alt"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="total-items">0</h3>
+            <p>Items in Stock</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon warning">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="expiring-soon">0</h3>
+            <p>Expiring Soon</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon danger">
+            <i class="fas fa-times-circle"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="expired-items">0</h3>
+            <p>Expired Items</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon success">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="recipes-found">0</h3>
+            <p>Recipes Available</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+          <button class="action-btn" onclick="window.location.href='inventory.html'">
+            <i class="fas fa-plus"></i>
+            Add Item
+          </button>
+          <button class="action-btn" onclick="window.location.href='recipes.html'">
+            <i class="fas fa-search"></i>
+            Find Recipes
+          </button>
+          <button class="action-btn" onclick="window.location.href='analytics.html'">
+            <i class="fas fa-chart-line"></i>
+            View Analytics
+          </button>
+        </div>
+      </div>
+
+      <!-- Recent Items -->
+      <div class="recent-items">
+        <h2>Recent Items</h2>
+        <div id="recent-items-list" class="items-list">
+          <p class="empty-state">No items added yet. <a href="inventory.html">Add your first item</a></p>
+        </div>
+      </div>
+
+      <!-- Expiring Soon -->
+      <div class="expiring-soon">
+        <h2>Expiring Soon</h2>
+        <div id="expiring-list" class="items-list">
+          <p class="empty-state">No items expiring soon!</p>
+        </div>
+      </div>
+
+      <!-- Recipe Suggestions -->
+      <div class="recipe-suggestions">
+        <h2>Recipe Suggestions</h2>
+        <div id="recipe-suggestions" class="recipe-grid">
+          <p class="empty-state">Add items to get recipe suggestions</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 WasteNot. Made with <i class="fas fa-heart"></i> for a sustainable future.</p>
+    </div>
+  </footer>
+</body>
+</html> 

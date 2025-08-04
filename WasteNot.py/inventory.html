@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventory - WasteNot</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script defer src="inventory.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-leaf"></i>
+        <span>WasteNot</span>
+      </div>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="inventory.html" class="nav-link active">Inventory</a>
+        <a href="recipes.html" class="nav-link">Recipes</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="profile.html" class="nav-link">Profile</a>
+      </div>
+      <div class="nav-auth">
+        <button id="login-btn" class="auth-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </button>
+        <button id="logout-btn" class="auth-btn" style="display: none;">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="inventory-header">
+      <h1>Inventory Management</h1>
+      <p>Track your food items and expiration dates</p>
+    </div>
+
+    <!-- Add Item Form -->
+    <div class="add-item-section">
+      <h2>Add New Item</h2>
+      <form id="add-item-form" class="item-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="item-name">Item Name</label>
+            <input type="text" id="item-name" placeholder="e.g., Milk, Bananas, Chicken" required>
+          </div>
+          <div class="form-group">
+            <label for="item-category">Category</label>
+            <select id="item-category" required>
+              <option value="">Select Category</option>
+              <option value="dairy">Dairy</option>
+              <option value="fruits">Fruits</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="meat">Meat</option>
+              <option value="grains">Grains</option>
+              <option value="pantry">Pantry</option>
+              <option value="frozen">Frozen</option>
+              <option value="beverages">Beverages</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="item-quantity">Quantity</label>
+            <input type="number" id="item-quantity" min="1" value="1" required>
+          </div>
+          <div class="form-group">
+            <label for="item-unit">Unit</label>
+            <select id="item-unit" required>
+              <option value="pieces">Pieces</option>
+              <option value="grams">Grams</option>
+              <option value="kilograms">Kilograms</option>
+              <option value="liters">Liters</option>
+              <option value="milliliters">Milliliters</option>
+              <option value="cups">Cups</option>
+              <option value="tablespoons">Tablespoons</option>
+              <option value="teaspoons">Teaspoons</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="item-expiry">Expiry Date</label>
+            <input type="date" id="item-expiry" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="item-notes">Notes (Optional)</label>
+          <textarea id="item-notes" placeholder="Any additional notes about this item..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-plus"></i>
+          Add Item
+        </button>
+      </form>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="inventory-controls">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-items" placeholder="Search items...">
+      </div>
+      <div class="filter-controls">
+        <select id="category-filter">
+          <option value="">All Categories</option>
+          <option value="dairy">Dairy</option>
+          <option value="fruits">Fruits</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="meat">Meat</option>
+          <option value="grains">Grains</option>
+          <option value="pantry">Pantry</option>
+          <option value="frozen">Frozen</option>
+          <option value="beverages">Beverages</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="status-filter">
+          <option value="">All Status</option>
+          <option value="fresh">Fresh</option>
+          <option value="expiring-soon">Expiring Soon</option>
+          <option value="expired">Expired</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Inventory List -->
+    <div class="inventory-list">
+      <div class="list-header">
+        <h2>Your Items</h2>
+        <div class="list-actions">
+          <button class="btn-secondary" id="bulk-delete-btn" style="display: none;">
+            <i class="fas fa-trash"></i>
+            Delete Selected
+          </button>
+        </div>
+      </div>
+      <div id="inventory-items" class="items-grid">
+        <p class="empty-state">No items added yet. Add your first item above!</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Item Modal -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Item</h3>
+        <span class="close">&times;</span>
+      </div>
+      <form id="edit-item-form" class="item-form">
+        <input type="hidden" id="edit-item-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-item-name">Item Name</label>
+            <input type="text" id="edit-item-name" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-item-category">Category</label>
+            <select id="edit-item-category" required>
+              <option value="dairy">Dairy</option>
+              <option value="fruits">Fruits</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="meat">Meat</option>
+              <option value="grains">Grains</option>
+              <option value="pantry">Pantry</option>
+              <option value="frozen">Frozen</option>
+              <option value="beverages">Beverages</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-item-quantity">Quantity</label>
+            <input type="number" id="edit-item-quantity" min="1" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-item-unit">Unit</label>
+            <select id="edit-item-unit" required>
+              <option value="pieces">Pieces</option>
+              <option value="grams">Grams</option>
+              <option value="kilograms">Kilograms</option>
+              <option value="liters">Liters</option>
+              <option value="milliliters">Milliliters</option>
+              <option value="cups">Cups</option>
+              <option value="tablespoons">Tablespoons</option>
+              <option value="teaspoons">Teaspoons</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-item-expiry">Expiry Date</label>
+            <input type="date" id="edit-item-expiry" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-item-notes">Notes</label>
+          <textarea id="edit-item-notes"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 WasteNot. Made with <i class="fas fa-heart"></i> for a sustainable future.</p>
+    </div>
+  </footer>
+</body>
+</html> 

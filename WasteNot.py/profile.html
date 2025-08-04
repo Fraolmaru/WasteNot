@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - WasteNot</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script defer src="profile.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-leaf"></i>
+        <span>WasteNot</span>
+      </div>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="inventory.html" class="nav-link">Inventory</a>
+        <a href="recipes.html" class="nav-link">Recipes</a>
+        <a href="analytics.html" class="nav-link">Analytics</a>
+        <a href="profile.html" class="nav-link active">Profile</a>
+      </div>
+      <div class="nav-auth">
+        <button id="login-btn" class="auth-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </button>
+        <button id="logout-btn" class="auth-btn" style="display: none;">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="profile-header">
+      <h1>Profile & Settings</h1>
+      <p>Manage your account and preferences</p>
+    </div>
+
+    <div class="profile-grid">
+      <!-- User Info Section -->
+      <div class="profile-section">
+        <h2>Account Information</h2>
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="user-details">
+            <h3 id="user-name">Guest User</h3>
+            <p id="user-email">guest@wastenot.com</p>
+            <p id="member-since">Member since: January 2024</p>
+          </div>
+        </div>
+        <div class="account-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="total-items-count">0</span>
+            <span class="stat-label">Items Tracked</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="days-active">0</span>
+            <span class="stat-label">Days Active</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="waste-reduced">0%</span>
+            <span class="stat-label">Waste Reduced</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences Section -->
+      <div class="profile-section">
+        <h2>Preferences</h2>
+        <form id="preferences-form" class="preferences-form">
+          <div class="form-group">
+            <label for="notification-email">Email Notifications</label>
+            <div class="toggle-group">
+              <label class="toggle">
+                <input type="checkbox" id="notification-email" checked>
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">Receive email reminders for expiring items</span>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="notification-push">Push Notifications</label>
+            <div class="toggle-group">
+              <label class="toggle">
+                <input type="checkbox" id="notification-push">
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">Receive push notifications</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reminder-days">Expiry Reminder Days</label>
+            <select id="reminder-days">
+              <option value="1">1 day before</option>
+              <option value="2">2 days before</option>
+              <option value="3" selected>3 days before</option>
+              <option value="5">5 days before</option>
+              <option value="7">1 week before</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="default-category">Default Category</label>
+            <select id="default-category">
+              <option value="">No default</option>
+              <option value="dairy">Dairy</option>
+              <option value="fruits">Fruits</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="meat">Meat</option>
+              <option value="grains">Grains</option>
+              <option value="pantry">Pantry</option>
+              <option value="frozen">Frozen</option>
+              <option value="beverages">Beverages</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="currency">Currency</label>
+            <select id="currency">
+              <option value="USD" selected>USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="CAD">CAD (C$)</option>
+              <option value="AUD">AUD (A$)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            Save Preferences
+          </button>
+        </form>
+      </div>
+
+      <!-- API Settings Section -->
+      <div class="profile-section">
+        <h2>API Configuration</h2>
+        <div class="api-settings">
+          <div class="api-group">
+            <h4>Spoonacular API</h4>
+            <p>Configure your Spoonacular API key for recipe features</p>
+            <div class="api-input-group">
+              <input type="password" id="spoonacular-api-key" placeholder="Enter your Spoonacular API key">
+              <button type="button" class="btn-secondary" onclick="testSpoonacularAPI()">
+                <i class="fas fa-test-tube"></i>
+                Test Connection
+              </button>
+            </div>
+            <small>Get your free API key at <a href="https://spoonacular.com/food-api" target="_blank">spoonacular.com</a></small>
+          </div>
+
+          <div class="api-group">
+            <h4>Firebase Configuration</h4>
+            <p>Configure Firebase for data storage</p>
+            <div class="firebase-config">
+              <textarea id="firebase-config" placeholder="Paste your Firebase config object here" rows="6"></textarea>
+            </div>
+            <small>Get your Firebase config from your Firebase project settings</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Management Section -->
+      <div class="profile-section">
+        <h2>Data Management</h2>
+        <div class="data-actions">
+          <div class="action-group">
+            <h4>Export Data</h4>
+            <p>Download your data for backup or analysis</p>
+            <div class="action-buttons">
+              <button class="btn-secondary" onclick="exportUserData('json')">
+                <i class="fas fa-download"></i>
+                Export as JSON
+              </button>
+              <button class="btn-secondary" onclick="exportUserData('csv')">
+                <i class="fas fa-file-csv"></i>
+                Export as CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="action-group">
+            <h4>Import Data</h4>
+            <p>Import data from a backup file</p>
+            <div class="file-upload">
+              <input type="file" id="import-file" accept=".json,.csv" style="display: none;">
+              <button class="btn-secondary" onclick="document.getElementById('import-file').click()">
+                <i class="fas fa-upload"></i>
+                Choose File
+              </button>
+              <span id="selected-file">No file selected</span>
+            </div>
+            <button class="btn-primary" onclick="importUserData()" disabled id="import-btn">
+              <i class="fas fa-upload"></i>
+              Import Data
+            </button>
+          </div>
+
+          <div class="action-group danger-zone">
+            <h4>Danger Zone</h4>
+            <p>Permanent actions that cannot be undone</p>
+            <div class="danger-actions">
+              <button class="btn-danger" onclick="clearAllData()">
+                <i class="fas fa-trash"></i>
+                Clear All Data
+              </button>
+              <button class="btn-danger" onclick="deleteAccount()">
+                <i class="fas fa-user-times"></i>
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help & Support Section -->
+      <div class="profile-section">
+        <h2>Help & Support</h2>
+        <div class="help-links">
+          <a href="#" class="help-link">
+            <i class="fas fa-question-circle"></i>
+            <span>FAQ</span>
+          </a>
+          <a href="#" class="help-link">
+            <i class="fas fa-book"></i>
+            <span>User Guide</span>
+          </a>
+          <a href="#" class="help-link">
+            <i class="fas fa-envelope"></i>
+            <span>Contact Support</span>
+          </a>
+          <a href="#" class="help-link">
+            <i class="fas fa-bug"></i>
+            <span>Report Bug</span>
+          </a>
+          <a href="#" class="help-link">
+            <i class="fas fa-lightbulb"></i>
+            <span>Feature Request</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="confirm-title">Confirm Action</h3>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message">Are you sure you want to proceed?</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+        <button class="btn-danger" id="confirm-action-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 WasteNot. Made with <i class="fas fa-heart"></i> for a sustainable future.</p>
+    </div>
+  </footer>
+</body>
+</html> 

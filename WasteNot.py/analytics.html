@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics - WasteNot</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="analytics.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i class="fas fa-leaf"></i>
+        <span>WasteNot</span>
+      </div>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="inventory.html" class="nav-link">Inventory</a>
+        <a href="recipes.html" class="nav-link">Recipes</a>
+        <a href="analytics.html" class="nav-link active">Analytics</a>
+        <a href="profile.html" class="nav-link">Profile</a>
+      </div>
+      <div class="nav-auth">
+        <button id="login-btn" class="auth-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </button>
+        <button id="logout-btn" class="auth-btn" style="display: none;">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="analytics-header">
+      <h1>Analytics & Insights</h1>
+      <p>Track your food waste patterns and discover ways to improve</p>
+    </div>
+
+    <!-- Time Period Selector -->
+    <div class="time-selector">
+      <h3>Time Period</h3>
+      <div class="time-buttons">
+        <button class="time-btn active" data-period="7">Last 7 Days</button>
+        <button class="time-btn" data-period="30">Last 30 Days</button>
+        <button class="time-btn" data-period="90">Last 3 Months</button>
+        <button class="time-btn" data-period="365">Last Year</button>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-apple-alt"></i>
+        </div>
+        <div class="metric-content">
+          <h3 id="total-items-metric">0</h3>
+          <p>Total Items</p>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon warning">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="metric-content">
+          <h3 id="wasted-items-metric">0</h3>
+          <p>Items Wasted</p>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon success">
+          <i class="fas fa-percentage"></i>
+        </div>
+        <div class="metric-content">
+          <h3 id="waste-percentage-metric">0%</h3>
+          <p>Waste Rate</p>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon info">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <div class="metric-content">
+          <h3 id="money-saved-metric">$0</h3>
+          <p>Money Saved</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Waste by Category</h3>
+          <p>See which food categories you waste most</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="category-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Waste Trend</h3>
+          <p>Track your waste over time</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="trend-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Expiration Analysis</h3>
+          <p>How long items last before expiring</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="expiration-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Monthly Comparison</h3>
+          <p>Compare this month with previous months</p>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="comparison-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights Section -->
+    <div class="insights-section">
+      <h2>Smart Insights</h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <div class="insight-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Top Wasted Item</h4>
+            <p id="top-wasted-item">No data available</p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Best Shopping Day</h4>
+            <p id="best-shopping-day">No data available</p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Improvement Trend</h4>
+            <p id="improvement-trend">No data available</p>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-icon">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Recipe Success Rate</h4>
+            <p id="recipe-success-rate">No data available</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="recommendations-section">
+      <h2>Personalized Recommendations</h2>
+      <div class="recommendations-grid">
+        <div class="recommendation-card">
+          <div class="recommendation-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <div class="recommendation-content">
+            <h4>Shopping Tips</h4>
+            <ul id="shopping-tips">
+              <li>Start tracking your inventory to get personalized tips</li>
+            </ul>
+          </div>
+        </div>
+        <div class="recommendation-card">
+          <div class="recommendation-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="recommendation-content">
+            <h4>Storage Tips</h4>
+            <ul id="storage-tips">
+              <li>Add items to your inventory to get storage recommendations</li>
+            </ul>
+          </div>
+        </div>
+        <div class="recommendation-card">
+          <div class="recommendation-icon">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <div class="recommendation-content">
+            <h4>Recipe Suggestions</h4>
+            <ul id="recipe-suggestions">
+              <li>Use your inventory to find recipes and reduce waste</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="export-section">
+      <h2>Export Data</h2>
+      <p>Download your analytics data for further analysis</p>
+      <div class="export-buttons">
+        <button class="btn-secondary" onclick="exportData('csv')">
+          <i class="fas fa-download"></i>
+          Export as CSV
+        </button>
+        <button class="btn-secondary" onclick="exportData('pdf')">
+          <i class="fas fa-file-pdf"></i>
+          Export as PDF
+        </button>
+        <button class="btn-secondary" onclick="exportData('json')">
+          <i class="fas fa-code"></i>
+          Export as JSON
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 WasteNot. Made with <i class="fas fa-heart"></i> for a sustainable future.</p>
+    </div>
+  </footer>
+</body>
+</html> 
