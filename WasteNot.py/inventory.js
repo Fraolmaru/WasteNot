@@ -13,6 +13,19 @@ document.addEventListener('DOMContentLoaded', function() {
   if (recipeForm) {
     recipeForm.addEventListener('submit', handleRecipeSearch);
   }
+
+  const inventorySearchBtn = document.getElementById('search-from-inventory-btn');
+  if (inventorySearchBtn) {
+    inventorySearchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // Clear input field to trigger inventory fallback in handleRecipeSearch
+      const recipeInput = document.getElementById('recipe-ingredients');
+      if (recipeInput) recipeInput.value = '';
+
+      handleRecipeSearch(e);
+    });
+  }
 });
 
 function initializeInventory() {
@@ -451,7 +464,7 @@ function displayRecipes(recipes) {
     card.innerHTML = `
       <img src="${recipe.image}" alt="${recipe.title}" />
       <h3>${recipe.title}</h3>
-      <p><strong>Used:</strong> ${used || recipe.usedIngredientCount}</p>
+      <p><strong>Using:</strong> ${used || recipe.usedIngredientCount}</p>
       <p><strong>Missing:</strong> ${missed || recipe.missedIngredientCount}</p>
       <a href="https://spoonacular.com/recipes/${encodeURIComponent(recipe.title.replace(/\s+/g, '-'))}-${recipe.id}" target="_blank" class="btn-primary">View Recipe</a>
     `;
