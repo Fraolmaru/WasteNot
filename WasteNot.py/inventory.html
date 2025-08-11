@@ -6,6 +6,7 @@
   <title>Inventory - WasteNot</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script defer src="app.js"></script>
   <script defer src="inventory.js"></script>
 </head>
 <body>
@@ -144,28 +145,6 @@
         <p class="empty-state">No items added yet. Add your first item above!</p>
       </div>
     </div>
-
-    <!-- Recipe Search by ingredients-->
-    <div class="recipe-search-section">
-      <h2>Find Recipes with your Ingredients</h2>
-      <form id="recipe-search-form" class="item-form">
-        <div class="form-group">
-          <label for="recipe-ingredients">Ingredients (comma seperated)</label>
-          <input type="text" id="recipe-ingredients" placeholder="e.g., chicken, rice, brocoli" required>
-        </div>
-        <button type="submit" class="btn-primary">
-          <i class="fas fa-search"></i>
-          Search Recipes by Input
-        </button>
-        <button id="search-from-inventory-btn" class="btn-primary">
-          <i class="fas fa-search"></i> 
-          Generate Recipes from My Inventory
-        </button>
-      </form>
-    </div>
-
-    <!-- Where recipes are displayed-->
-    <div id="recipe-results" class="items-grid"></div>
   </main>
 
   <!-- Edit Item Modal -->

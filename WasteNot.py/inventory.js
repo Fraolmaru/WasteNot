@@ -3,29 +3,8 @@ let currentItems = [];
 let filteredItems = [];
 let editingItemId = null;
 
-// API key
-const SPOONACULAR_API_KEY = "b76b4134ccd3415ca766cde58f04c8c0";
-
 document.addEventListener('DOMContentLoaded', function() {
   initializeInventory();
-
-  const recipeForm = document.getElementById('recipe-search-form');
-  if (recipeForm) {
-    recipeForm.addEventListener('submit', handleRecipeSearch);
-  }
-
-  const inventorySearchBtn = document.getElementById('search-from-inventory-btn');
-  if (inventorySearchBtn) {
-    inventorySearchBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      // Clear input field to trigger inventory fallback in handleRecipeSearch
-      const recipeInput = document.getElementById('recipe-ingredients');
-      if (recipeInput) recipeInput.value = '';
-
-      handleRecipeSearch(e);
-    });
-  }
 });
 
 function initializeInventory() {
@@ -391,86 +370,6 @@ document.addEventListener('change', function(e) {
     updateBulkDeleteButton();
   }
 });
-
-// Recipe Search
-async function handleRecipeSearch(e) {
-  e.preventDefault();
-  const resultsContainer = document.getElementById('recipe-results');
-  resultsContainer.innerHTML = '<p>Loading recipes...</p>';
-
-  // 1) prefer user input; fallback to inventory items
-  const userInput = (document.getElementById('recipe-ingredients').value || '').trim();
-  let ingredientsList = [];
-
-  if (userInput) {
-    ingredientsList = userInput.split(',').map(s => s.trim()).filter(Boolean);
-  } else {
-    // fallback: use only non-expired inventory items (optional)
-    const now = new Date();
-    ingredientsList = currentItems
-      .filter(it => {
-        const exp = new Date(it.expiryDate);
-        return !isNaN(exp) && exp >= now; // only not-expired items
-      })
-      .map(it => it.name.trim())
-      .filter(Boolean);
-  }
-
-  if (ingredientsList.length === 0) {
-    resultsContainer.innerHTML = '<p>Please add items to your inventory or type ingredients to search.</p>';
-    return;
-  }
-
-  // Limit number of ingredients to avoid very long query
-  const ingredients = ingredientsList.slice(0, 20).join(',');
-  const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(ingredients)}&number=8&ranking=1&ignorePantry=true&apiKey=${SPOONACULAR_API_KEY}`;
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      const text = await res.text();
-      console.error('Spoonacular response error:', res.status, text);
-      resultsContainer.innerHTML = `<p>Error fetching recipes (status ${res.status}). Check console for details.</p>`;
-      return;
-    }
-
-    const data = await res.json();
-
-    // Spoonacular returns an array for this endpoint on success
-    if (!Array.isArray(data) || data.length === 0) {
-      console.log('Spoonacular returned empty or unexpected data:', data);
-      resultsContainer.innerHTML = '<p>No recipes found for the provided ingredients. Try adjusting names (e.g., "broccoli" not "brocoli").</p>';
-      return;
-    }
-
-    displayRecipes(data);
-  } catch (error) {
-    console.error('Fetch error:', error);
-    resultsContainer.innerHTML = '<p>Error fetching recipes. Please try again.</p>';
-  }
-}
-
-function displayRecipes(recipes) {
-  const container = document.getElementById('recipe-results');
-  container.innerHTML = '';
-
-  recipes.forEach(recipe => {
-    const card = document.createElement('div');
-    card.className = 'recipe-card';
-    // Small list of missed ingredients for user info
-    const missed = (recipe.missedIngredients || []).map(i => i.name).join(', ');
-    const used = (recipe.usedIngredients || []).map(i => i.name).join(', ');
-
-    card.innerHTML = `
-      <img src="${recipe.image}" alt="${recipe.title}" />
-      <h3>${recipe.title}</h3>
-      <p><strong>Using:</strong> ${used || recipe.usedIngredientCount}</p>
-      <p><strong>Missing:</strong> ${missed || recipe.missedIngredientCount}</p>
-      <a href="https://spoonacular.com/recipes/${encodeURIComponent(recipe.title.replace(/\s+/g, '-'))}-${recipe.id}" target="_blank" class="btn-primary">View Recipe</a>
-    `;
-    container.appendChild(card);
-  });
-}
 
 // Export functions for global access
 window.editItem = editItem;
