@@ -10,9 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeRecipes() {
   loadUserData();
   setupEventListeners();
-  loadAvailableIngredients();
-  
-  // Load saved API key
+
   const savedApiKey = localStorage.getItem('spoonacular_api_key');
   if (savedApiKey) {
     spoonacularApiKey = savedApiKey;
@@ -20,42 +18,22 @@ function initializeRecipes() {
 }
 
 function setupEventListeners() {
-  // Tab switching
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  tabButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const tab = this.dataset.tab;
-      switchTab(tab);
-    });
-  });
-  
-  // Manual ingredient input
-  const addIngredientBtn = document.getElementById('add-ingredient-btn');
-  if (addIngredientBtn) {
-    addIngredientBtn.addEventListener('click', addManualIngredient);
-  }
-  
-  const ingredientInput = document.getElementById('ingredient-input');
-  if (ingredientInput) {
-    ingredientInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        addManualIngredient();
-      }
-    });
-  }
-  
-  // Recipe search buttons
+  // Inventory button
   const findRecipesBtn = document.getElementById('find-recipes-btn');
   if (findRecipesBtn) {
     findRecipesBtn.addEventListener('click', searchRecipesFromInventory);
   }
-  
-  const searchRecipesBtn = document.getElementById('search-recipes-btn');
-  if (searchRecipesBtn) {
-    searchRecipesBtn.addEventListener('click', searchRecipesFromManual);
+
+  // Manual search
+  const form = document.getElementById('recipe-search-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      searchRecipesFromManual();
+    });
   }
-  
-  // Recipe modal
+
+  // Modal
   const modal = document.getElementById('recipe-modal');
   if (modal) {
     modal.addEventListener('click', function(e) {
@@ -63,12 +41,34 @@ function setupEventListeners() {
         closeRecipeModal();
       }
     });
-    
     const closeBtn = modal.querySelector('.close');
     if (closeBtn) {
       closeBtn.addEventListener('click', closeRecipeModal);
     }
   }
+}
+
+function getInventoryIngredientNames() {
+  const raw = localStorage.getItem('wastenot_items');
+  if (!raw) {
+    return [];
+  }
+
+  let items = [];
+  try { 
+    items = JSON.parse(raw); 
+  } catch { 
+    return []; 
+  }
+
+  const now = new Date();
+  return items
+    .filter(it => {
+      const exp = new Date(it.expiryDate);
+      return !isNaN(exp) && exp >= now;
+    })
+    .map(it => it.name)
+    .filter(Boolean);
 }
 
 function loadUserData() {
@@ -85,127 +85,23 @@ function loadUserData() {
   }
 }
 
-function switchTab(tabName) {
-  // Update tab buttons
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-  
-  // Update content
-  document.querySelectorAll('.search-content').forEach(content => {
-    content.classList.remove('active');
-  });
-  document.getElementById(`${tabName}-search`).classList.add('active');
-  
-  // Update button states
-  updateButtonStates();
-}
-
-function loadAvailableIngredients() {
-  const items = window.appState.items || [];
-  const ingredientsList = document.getElementById('ingredients-list');
-  
-  if (items.length === 0) {
-    ingredientsList.innerHTML = '<p class="empty-state">No ingredients in your inventory. <a href="inventory.html">Add some items</a> first!</p>';
-    return;
-  }
-  
-  ingredientsList.innerHTML = '';
-  
-  items.forEach(item => {
-    const ingredientTag = document.createElement('div');
-    ingredientTag.className = 'ingredient-tag';
-    ingredientTag.innerHTML = `
-      <span>${item.name}</span>
-      <button class="remove-ingredient" onclick="toggleIngredient('${item.name}')">
-        <i class="fas fa-plus"></i>
-      </button>
-    `;
-    ingredientsList.appendChild(ingredientTag);
-  });
-  
-  updateButtonStates();
-}
-
-function toggleIngredient(ingredientName) {
-  const index = selectedIngredients.indexOf(ingredientName);
-  if (index > -1) {
-    selectedIngredients.splice(index, 1);
-  } else {
-    selectedIngredients.push(ingredientName);
-  }
-  
-  updateSelectedIngredients();
-  updateButtonStates();
-}
-
-function addManualIngredient() {
-  const input = document.getElementById('ingredient-input');
-  const ingredient = input.value.trim();
-  
-  if (ingredient && !selectedIngredients.includes(ingredient)) {
-    selectedIngredients.push(ingredient);
-    input.value = '';
-    updateSelectedIngredients();
-    updateButtonStates();
-  }
-}
-
-function updateSelectedIngredients() {
-  const manualIngredients = document.getElementById('manual-ingredients');
-  manualIngredients.innerHTML = '';
-  
-  selectedIngredients.forEach(ingredient => {
-    const tag = document.createElement('div');
-    tag.className = 'ingredient-tag';
-    tag.innerHTML = `
-      <span>${ingredient}</span>
-      <button class="remove-ingredient" onclick="removeManualIngredient('${ingredient}')">
-        <i class="fas fa-times"></i>
-      </button>
-    `;
-    manualIngredients.appendChild(tag);
-  });
-}
-
-function removeManualIngredient(ingredient) {
-  const index = selectedIngredients.indexOf(ingredient);
-  if (index > -1) {
-    selectedIngredients.splice(index, 1);
-    updateSelectedIngredients();
-    updateButtonStates();
-  }
-}
-
-function updateButtonStates() {
-  const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
-  
-  if (activeTab === 'inventory') {
-    const findRecipesBtn = document.getElementById('find-recipes-btn');
-    findRecipesBtn.disabled = selectedIngredients.length === 0;
-  } else {
-    const searchRecipesBtn = document.getElementById('search-recipes-btn');
-    searchRecipesBtn.disabled = selectedIngredients.length === 0;
-  }
-}
-
 async function searchRecipesFromInventory() {
-  if (selectedIngredients.length === 0) {
-    showNotification('Please select ingredients first', 'error');
+  const ingredients = getInventoryIngredientNames();
+  if (ingredients.length === 0) {
+    showNotification('No non-expired items in your inventory. Try manual search!', 'error');
     return;
   }
-  
-  await searchRecipes(selectedIngredients);
+  await searchRecipesWithComplex(ingredients); // allows extra ingredients + respects filters
 }
 
 async function searchRecipesFromManual() {
-  if (selectedIngredients.length === 0) {
-    showNotification('Please add ingredients first', 'error');
+  const raw = (document.getElementById('recipe-ingredients')?.value || '').trim();
+  const ingredients = raw.split(',').map(s => s.trim()).filter(Boolean);
+  if (ingredients.length === 0) {
+    showNotification('Please enter at least one ingredient.', 'error');
     return;
   }
-  
-  await searchRecipes(selectedIngredients);
+  await searchRecipes(ingredients);
 }
 
 async function searchRecipes(ingredients) {
@@ -265,6 +161,49 @@ async function searchRecipes(ingredients) {
     showNotification('Error searching recipes. Please check your API key and try again.', 'error');
     
     // Show demo recipes if API fails
+    displayDemoRecipes();
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function searchRecipesWithComplex(ingredients) {
+  if (!spoonacularApiKey) {
+    showNotification('Please configure your Spoonacular API key in Profile settings', 'error');
+    return;
+  }
+
+  showLoading(true);
+  try {
+    const cuisine = document.getElementById('cuisine-filter')?.value || '';
+    const diet = document.getElementById('diet-filter')?.value || '';
+    const maxTime = document.getElementById('max-time-filter')?.value || '';
+
+    const params = new URLSearchParams({
+      apiKey: spoonacularApiKey,
+      number: '12',
+      addRecipeInformation: 'true',
+      instructionsRequired: 'true',
+      includeIngredients: ingredients.slice(0, 20).join(','),
+    });
+    if (cuisine) params.set('cuisine', cuisine);
+    if (diet) params.set('diet', diet);
+    if (maxTime) params.set('maxReadyTime', maxTime);
+
+    const url = `https://api.spoonacular.com/recipes/complexSearch?${params.toString()}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`API ${res.status}`);
+
+    const data = await res.json();
+    const results = Array.isArray(data?.results) ? data.results : [];
+
+    currentRecipes = results;
+    localStorage.setItem('wastenot_recipes', JSON.stringify(results));
+    displayRecipes(results);
+    showNotification(`Found ${results.length} recipes!`, 'success');
+  } catch (err) {
+    console.error(err);
+    showNotification('Error searching recipes. Please check your API key and try again.', 'error');
     displayDemoRecipes();
   } finally {
     showLoading(false);
@@ -433,7 +372,5 @@ async function testSpoonacularAPI() {
 }
 
 // Export functions for global access
-window.toggleIngredient = toggleIngredient;
-window.removeManualIngredient = removeManualIngredient;
 window.closeRecipeModal = closeRecipeModal;
-window.testSpoonacularAPI = testSpoonacularAPI; 
+window.testSpoonacularAPI = testSpoonacularAPI;

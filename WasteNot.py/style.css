@@ -845,6 +845,11 @@ body {
   flex-wrap: wrap;
 }
 
+.recipe-filters h2 {
+  flex-basis: 100%;
+  margin: 0 0 10px 0;
+}
+
 .filter-group {
   display: flex;
   flex-direction: column;
