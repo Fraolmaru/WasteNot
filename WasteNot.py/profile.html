@@ -81,7 +81,7 @@
             <label for="notification-email">Email Notifications</label>
             <div class="toggle-group">
               <label class="toggle">
-                <input type="checkbox" id="notification-email" checked>
+                <input type="checkbox" id="notification-email" name="notification-email" checked>
                 <span class="slider"></span>
               </label>
               <span class="toggle-label">Receive email reminders for expiring items</span>
@@ -92,7 +92,7 @@
             <label for="notification-push">Push Notifications</label>
             <div class="toggle-group">
               <label class="toggle">
-                <input type="checkbox" id="notification-push">
+                <input type="checkbox" id="notification-push" name="notification-push">
                 <span class="slider"></span>
               </label>
               <span class="toggle-label">Receive push notifications</span>
@@ -101,7 +101,7 @@
 
           <div class="form-group">
             <label for="reminder-days">Expiry Reminder Days</label>
-            <select id="reminder-days">
+            <select id="reminder-days" name="reminder-days">
               <option value="1">1 day before</option>
               <option value="2">2 days before</option>
               <option value="3" selected>3 days before</option>
@@ -112,7 +112,7 @@
 
           <div class="form-group">
             <label for="default-category">Default Category</label>
-            <select id="default-category">
+            <select id="default-category" name="default-category">
               <option value="">No default</option>
               <option value="dairy">Dairy</option>
               <option value="fruits">Fruits</option>
@@ -128,7 +128,7 @@
 
           <div class="form-group">
             <label for="currency">Currency</label>
-            <select id="currency">
+            <select id="currency" name="currency">
               <option value="USD" selected>USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="GBP">GBP (£)</option>
