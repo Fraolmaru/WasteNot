@@ -25,11 +25,11 @@
         <a href="profile.html" class="nav-link active">Profile</a>
       </div>
       <div class="nav-auth">
-        <button id="login-btn" class="auth-btn">
+        <button id="login-btn" class="auth-btn" type="button" aria-pressed="false">
           <i class="fas fa-sign-in-alt"></i>
           Login
         </button>
-        <button id="logout-btn" class="auth-btn" style="display: none;">
+        <button id="logout-btn" class="auth-btn" type="button" style="display: none;" aria-pressed="true">
           <i class="fas fa-sign-out-alt"></i>
           Logout
         </button>
@@ -266,7 +266,7 @@
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeConfirmModal()">Cancel</button>
-        <button class="btn-danger" id="confirm-action-btn">Confirm</button>
+        <button class="btn-danger" id="confirm-action-btn" type="button">Confirm</button>
       </div>
     </div>
   </div>
