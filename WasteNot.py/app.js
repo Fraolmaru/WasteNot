@@ -31,21 +31,41 @@ function initializeApp() {
   loadSavedData();
 }
 
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('#login-btn, #logout-btn');
+  if (!btn) {
+    return;
+  }
+  e.preventDefault();
+  try {
+    if (btn.id === 'login-btn') {
+      handleLogin();
+    } else {
+      handleLogout();
+    }
+  } catch (err) {
+    console.error('Auth handler error:', err);
+  }
+}, true);
+
+
 function setupEventListeners() {
-  // Auth buttons
-  const loginBtn = document.getElementById('login-btn');
-  const logoutBtn = document.getElementById('logout-btn');
+    // one delegated handler for ALL login/logout buttons anywhere
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.auth-btn');
+      if (!btn) {
+        return;
+      }
+      e.preventDefault();
+      if (btn.id === 'login-btn') {
+        handleLogin();
+      } else if (btn.id === 'logout-btn') {
+        handleLogout();
+      }
+    }, true);
   
-  if (loginBtn) {
-    loginBtn.addEventListener('click', handleLogin);
-  }
-  
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', handleLogout);
-  }
-  
-  // Navigation
-  setupNavigation();
+    // Navigation highlight
+    setupNavigation();
 }
 
 function setupNavigation() {

@@ -1,209 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recipes - WasteNot</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script defer src="recipes.js"></script>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <div class="nav-logo">
-        <i class="fas fa-leaf"></i>
-        <span>WasteNot</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipes - WasteNot</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script defer src="app.js"></script>
+    <script defer src="recipes.js"></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-leaf"></i>
+          <span>WasteNot</span>
+        </div>
+        <div class="nav-menu" id="nav-menu">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="dashboard.html" class="nav-link">Dashboard</a>
+          <a href="inventory.html" class="nav-link">Inventory</a>
+          <a href="recipes.html" class="nav-link active">Recipes</a>
+          <a href="analytics.html" class="nav-link">Analytics</a>
+          <a href="profile.html" class="nav-link">Profile</a>
+        </div>
+        <div class="nav-auth">
+          <button id="login-btn" class="auth-btn" type="button" aria-pressed="false">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+          </button>
+          <button
+            id="logout-btn"
+            class="auth-btn"
+            type="button"
+            style="display: none;"
+            aria-pressed="true"
+          >
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </div>
       </div>
-      <div class="nav-menu" id="nav-menu">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="dashboard.html" class="nav-link">Dashboard</a>
-        <a href="inventory.html" class="nav-link">Inventory</a>
-        <a href="recipes.html" class="nav-link active">Recipes</a>
-        <a href="analytics.html" class="nav-link">Analytics</a>
-        <a href="profile.html" class="nav-link">Profile</a>
+    </nav>
+
+    <main class="main-content">
+      <div class="recipes-header">
+        <h1>Recipe Discovery</h1>
+        <p>Find delicious recipes using your available ingredients</p>
       </div>
-      <div class="nav-auth">
-        <button id="login-btn" class="auth-btn">
-          <i class="fas fa-sign-in-alt"></i>
-          Login
+
+      <!-- Recipe Filters -->
+      <div class="recipe-filters">
+        <h2>Filters</h2>
+        <div class="filter-group">
+          <label for="cuisine-filter">Cuisine:</label>
+          <select id="cuisine-filter">
+            <option value="">Any Cuisine</option>
+            <option value="italian">Italian</option>
+            <option value="mexican">Mexican</option>
+            <option value="asian">Asian</option>
+            <option value="american">American</option>
+            <option value="mediterranean">Mediterranean</option>
+            <option value="indian">Indian</option>
+            <option value="french">French</option>
+            <option value="thai">Thai</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="diet-filter">Diet:</label>
+          <select id="diet-filter">
+            <option value="">Any Diet</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="gluten-free">Gluten Free</option>
+            <option value="dairy-free">Dairy Free</option>
+            <option value="keto">Keto</option>
+            <option value="paleo">Paleo</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="max-time-filter">Max Time:</label>
+          <select id="max-time-filter">
+            <option value="">Any Time</option>
+            <option value="15">15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60">1 hour</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Recipe Search -->
+
+      <!-- Inventory Search-->
+      <div class="recipe-search-section">
+        <h2>Find Recipes with My Inventory</h2>
+        <button type="button" id="find-recipes-btn" class="btn-primary">
+          <i class="fas fa-search"></i>
+          Search
         </button>
-        <button id="logout-btn" class="auth-btn" style="display: none;">
-          <i class="fas fa-sign-out-alt"></i>
-          Logout
-        </button>
       </div>
-    </div>
-  </nav>
 
-  <main class="main-content">
-    <div class="recipes-header">
-      <h1>Recipe Discovery</h1>
-      <p>Find delicious recipes using your available ingredients</p>
-    </div>
+      <!-- Manual Search-->
+      <div class="recipe-search-section">
+        <h2>Manual Search</h2>
+        <form id="recipe-search-form" class="item-form">
+          <div class="form-group">
+            <label for="recipe-ingredients">Ingredients (comma separated)</label>
+            <input
+              type="text"
+              id="recipe-ingredients"
+              placeholder="e.g., chicken, rice, brocoli"
+              required
+            />
+          </div>
 
-    <!-- Recipe Search Section -->
-    <div class="recipe-search-section">
-      <div class="search-options">
-        <div class="search-tabs">
-          <button class="tab-btn active" data-tab="inventory">Use My Inventory</button>
-          <button class="tab-btn" data-tab="manual">Manual Search</button>
-        </div>
-        
-        <!-- Inventory-based search -->
-        <div id="inventory-search" class="search-content active">
-          <div class="available-ingredients">
-            <h3>Available Ingredients</h3>
-            <div id="ingredients-list" class="ingredients-grid">
-              <p class="empty-state">No ingredients in your inventory. <a href="inventory.html">Add some items</a> first!</p>
-            </div>
-            <button id="find-recipes-btn" class="btn-primary" disabled>
-              <i class="fas fa-search"></i>
-              Find Recipes
-            </button>
+          
+
+          <button type="submit" id="search-recipes-btn" class="btn-primary">
+            <i class="fas fa-search"></i>
+            Search
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading State -->
+      <div
+        id="loading-recipes"
+        class="loading-state"
+        style="display: none;"
+      >
+        <div class="spinner"></div>
+        <p>Finding delicious recipes for you...</p>
+      </div>
+
+      <!-- Recipe Results -->
+      <div id="recipe-results" class="recipe-results">
+        <div class="results-header">
+          <h2>Recipe Results</h2>
+          <div class="results-info">
+            <span id="results-count">0 recipes found</span>
           </div>
         </div>
+        <div id="recipes-grid" class="recipes-grid">
+          <p class="empty-state">Search for recipes to see results here</p>
+        </div>
+      </div>
 
-        <!-- Manual search -->
-        <div id="manual-search" class="search-content">
-          <div class="manual-search-form">
-            <h3>Search by Ingredients</h3>
-            <div class="ingredient-input-group">
-              <input type="text" id="ingredient-input" placeholder="Enter an ingredient (e.g., chicken, tomatoes)">
-              <button type="button" id="add-ingredient-btn" class="btn-secondary">
-                <i class="fas fa-plus"></i>
-                Add
-              </button>
-            </div>
-            <div id="manual-ingredients" class="ingredients-tags">
-              <!-- Manual ingredients will be added here -->
-            </div>
-            <button id="search-recipes-btn" class="btn-primary" disabled>
-              <i class="fas fa-search"></i>
-              Search Recipes
-            </button>
+      <!-- Recipe Detail Modal -->
+      <div id="recipe-modal" class="modal">
+        <div class="modal-content recipe-modal">
+          <div class="modal-header">
+            <h3 id="modal-recipe-title">Recipe Title</h3>
+            <span class="close">&times;</span>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recipe Filters -->
-    <div class="recipe-filters">
-      <div class="filter-group">
-        <label for="cuisine-filter">Cuisine:</label>
-        <select id="cuisine-filter">
-          <option value="">Any Cuisine</option>
-          <option value="italian">Italian</option>
-          <option value="mexican">Mexican</option>
-          <option value="asian">Asian</option>
-          <option value="american">American</option>
-          <option value="mediterranean">Mediterranean</option>
-          <option value="indian">Indian</option>
-          <option value="french">French</option>
-          <option value="thai">Thai</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="diet-filter">Diet:</label>
-        <select id="diet-filter">
-          <option value="">Any Diet</option>
-          <option value="vegetarian">Vegetarian</option>
-          <option value="vegan">Vegan</option>
-          <option value="gluten-free">Gluten Free</option>
-          <option value="dairy-free">Dairy Free</option>
-          <option value="keto">Keto</option>
-          <option value="paleo">Paleo</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="max-time-filter">Max Time:</label>
-        <select id="max-time-filter">
-          <option value="">Any Time</option>
-          <option value="15">15 minutes</option>
-          <option value="30">30 minutes</option>
-          <option value="45">45 minutes</option>
-          <option value="60">1 hour</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Loading State -->
-    <div id="loading-recipes" class="loading-state" style="display: none;">
-      <div class="spinner"></div>
-      <p>Finding delicious recipes for you...</p>
-    </div>
-
-    <!-- Recipe Results -->
-    <div id="recipe-results" class="recipe-results">
-      <div class="results-header">
-        <h2>Recipe Results</h2>
-        <div class="results-info">
-          <span id="results-count">0 recipes found</span>
-        </div>
-      </div>
-      <div id="recipes-grid" class="recipes-grid">
-        <p class="empty-state">Search for recipes to see results here</p>
-      </div>
-    </div>
-
-    <!-- Recipe Detail Modal -->
-    <div id="recipe-modal" class="modal">
-      <div class="modal-content recipe-modal">
-        <div class="modal-header">
-          <h3 id="modal-recipe-title">Recipe Title</h3>
-          <span class="close">&times;</span>
-        </div>
-        <div class="recipe-detail">
-          <div class="recipe-image">
-            <img id="modal-recipe-image" src="" alt="Recipe">
-          </div>
-          <div class="recipe-info">
-            <div class="recipe-meta">
-              <span class="meta-item">
-                <i class="fas fa-clock"></i>
-                <span id="modal-recipe-time">0 min</span>
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-users"></i>
-                <span id="modal-recipe-servings">0 servings</span>
-              </span>
-              <span class="meta-item">
-                <i class="fas fa-star"></i>
-                <span id="modal-recipe-rating">0</span>
-              </span>
+          <div class="recipe-detail">
+            <div class="recipe-image">
+              <img id="modal-recipe-image" src="" alt="Recipe" />
             </div>
-            <div class="recipe-ingredients">
-              <h4>Ingredients</h4>
-              <ul id="modal-recipe-ingredients">
-                <!-- Ingredients will be populated here -->
-              </ul>
-            </div>
-            <div class="recipe-instructions">
-              <h4>Instructions</h4>
-              <ol id="modal-recipe-instructions">
-                <!-- Instructions will be populated here -->
-              </ol>
-            </div>
-            <div class="recipe-actions">
-              <a id="modal-recipe-link" href="#" target="_blank" class="btn-primary">
-                <i class="fas fa-external-link-alt"></i>
-                View Full Recipe
-              </a>
-              <button class="btn-secondary" onclick="closeRecipeModal()">
-                <i class="fas fa-times"></i>
-                Close
-              </button>
+            <div class="recipe-info">
+              <div class="recipe-meta">
+                <span class="meta-item">
+                  <i class="fas fa-clock"></i>
+                  <span id="modal-recipe-time">0 min</span>
+                </span>
+                <span class="meta-item">
+                  <i class="fas fa-users"></i>
+                  <span id="modal-recipe-servings">0 servings</span>
+                </span>
+                <span class="meta-item">
+                  <i class="fas fa-star"></i>
+                  <span id="modal-recipe-rating">0</span>
+                </span>
+              </div>
+              <div class="recipe-ingredients">
+                <h4>Ingredients</h4>
+                <ul id="modal-recipe-ingredients">
+                  <!-- Ingredients will be populated here -->
+                </ul>
+              </div>
+              <div class="recipe-instructions">
+                <h4>Instructions</h4>
+                <ol id="modal-recipe-instructions">
+                  <!-- Instructions will be populated here -->
+                </ol>
+              </div>
+              <div class="recipe-actions">
+                <a
+                  id="modal-recipe-link"
+                  href="#"
+                  target="_blank"
+                  class="btn-primary"
+                >
+                  <i class="fas fa-external-link-alt"></i>
+                  View Full Recipe
+                </a>
+                <button class="btn-secondary" type="button" onclick="closeRecipeModal()">
+                  <i class="fas fa-times"></i>
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <p>&copy; 2024 WasteNot. Made with <i class="fas fa-heart"></i> for a sustainable future.</p>
-    </div>
-  </footer>
-</body>
-</html> 
+    <footer class="footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2024 WasteNot. Made with
+          <i class="fas fa-heart"></i> for a sustainable future.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

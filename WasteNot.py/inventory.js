@@ -374,4 +374,4 @@ document.addEventListener('change', function(e) {
 // Export functions for global access
 window.editItem = editItem;
 window.deleteItem = deleteItem;
-window.closeEditModal = closeEditModal; 
+window.closeEditModal = closeEditModal;
